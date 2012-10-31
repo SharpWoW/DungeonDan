@@ -1,0 +1,12 @@
+## Interface: 50001
+## Version: @project-version@
+## Title: Dungeon Dan
+## Notes: Are you lacking the motivation to win? Dungeon Dan turns dungeon doldrums into happy fun time!
+## Author: F16Gaming
+## SavedVariables: DUNGEONDAN
+
+AoeSpells.lua
+
+EventManager.lua
+Main.lua
+Dan.lua
