@@ -28,6 +28,9 @@ F.Logic = {
 			return a and fn(...)
 		end
 		return function() return fn(unpack(args)) end
+	end,
+	Not = function(cond)
+		return function() return not cond() end
 	end
 }
 
