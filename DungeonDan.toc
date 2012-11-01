@@ -5,6 +5,10 @@
 ## Author: F16Gaming
 ## SavedVariables: DUNGEONDAN
 
+# Libraries
+lib\LibStub\LibStub.lua
+lib\LibBossIDs-1.0\LibBossIDs-1.0.lua
+
 AoeSpells.lua
 
 EventManager.lua
