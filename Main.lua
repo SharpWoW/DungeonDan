@@ -39,10 +39,52 @@ function T.Events.ADDON_LOADED(self, event, ...)
 end
 
 function T.Events.PLAYER_ENTERING_WORLD(self, event, ...)
-	if not Dan then
-		self:CreateDan()
+	if Dan then return end
+	self:CreateDan()
 
-		Dan = self.Dan
+	Dan = self.Dan
+
+	local f = CreateFrame("Frame")
+	f.t = 0
+	f:SetScript("OnUpdate", function(s,e)
+		s.t = s.t + e
+		if s.t >= 2 then
+			s:SetScript("OnUpdate", nil)
+			Dan:ResetModelSettings()
+			Dan:DoAction(Dan.Actions.Welcome, true)
+		end
+	end)
+
+	-- Register callbacks on boss mod, if any
+
+	local function bossKill()
+		Dan:DoAction(Dan.Actions.BossKill)
+	end
+
+	local function bossWipe()
+		Dan:DoAction(Dan.Actions.BossWipe)
+	end
+
+	if DBM then
+		DBM:RegisterCallback("kill", bossKill)
+		DBM:RegisterCallback("wipe", bossWipe)
+	elseif DXE then
+		DXE.RegisterCallback(T, "DXECallback", bossKill)
+	elseif BigWigs then
+		T.Events.CHAT_MSG_ADDON = function(s, e, prefix, message, type, sender)
+			if prefix ~= "BigWigs" then return end
+			local sync, rest = select(3, message:find("(%S+)%s*(.*)$"))
+			if sync ~= "Death" then return end
+			bossKill()
+		end
+	else -- LibBossIDs
+		local lib = LibStub:GetLibrary("LibBossIDs-1.0", true)
+		T.Events.COMBAT_LOG_EVENT_UNFILTERED = function(s, e, ...)
+			local _, event = ...
+			if event ~= "PARTY_KILL" then return end
+			local id = tonumber((select(8, ...)):sub(6, 10), 16)
+			if lib.BossIDs[id] then bossKill() end
+		end
 	end
 end
 
