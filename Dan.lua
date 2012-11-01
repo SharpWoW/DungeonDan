@@ -70,7 +70,10 @@ Dan.DefaultAnimation = Dan.Animations.Idle
 Dan.Sounds = {
 	[Dan.Actions.DungeonReady] = {
 		Master = true,
-		{"VO_DUNGEON_READY", 7}
+		{"VO_DUNGEON_READY_1", 2},
+		{"VO_DUNGEON_READY_2", 2},
+		{"VO_DUNGEON_READY_3", 2},
+		{"VO_DUNGEON_READY_4", 2}
 	},
 	[Dan.Actions.AoeDamage] = {
 		{"VO_AOE_1", 3},
@@ -85,23 +88,8 @@ Dan.Sequences = {
 		[1] = {
 			Time = 0,
 			Animation = Dan.Animations.Gasp,
-			Sound = true
-		},
-		[2] = {
-			Time = 1.8,
-			Animation = Dan.Animations.Gasp,
-			Sound = false
-		},
-		[3] = {
-			Time = 3.4,
-			Animation = Dan.Animations.Gasp,
-			Sound = false
-		},
-		[4] = {
-			Time = 4.85,
-			Animation = Dan.Animations.Gasp,
-			Sound = false,
-			Skip = {1, 7.5}
+			Sound = true,
+			Repeating = true
 		}
 	},
 	[Dan.Actions.AoeDamage] = {
