@@ -4,27 +4,29 @@ if T.Dan then return end
 
 T.Dan = {
 	Actions = {
-		DungeonReady = 0,
-		QueueDamage = 1,
-		QueueHealer = 2,
-		QueueTank = 3,
-		QueueTalk = 4,
-		AoeDamage = 5,
-		DungeonFinish = 6,
-		BossKill = 7,
-		PlayerDeath = 8,
-		GroupDeath = 9,
-		LootNinja = 10, -- Player needed on loot that isn't appropriate for them
-		LootWin = 11, -- Player needed and won on loot that is appropriate for them
-		LootLose = 12 -- Player needed and lost on loot that is appropriate for them
+		Welcome = 0,
+		DungeonReady = 1,
+		QueueDamage = 2,
+		QueueHealer = 3,
+		QueueTank = 4,
+		QueueTalk = 5,
+		AoeDamage = 6,
+		DungeonFinish = 7,
+		BossKill = 8,
+		BossWipe = 9,
+		PlayerDeath = 10,
+		GroupDeath = 11,
+		LootNinja = 12, -- Player needed on loot that isn't appropriate for them
+		LootWin = 13, -- Player needed and won on loot that is appropriate for them
+		LootLose = 14 -- Player needed and lost on loot that is appropriate for them
 	}
 }
 
 local Dan = {
 	Initialized = false,
 	DefaultDisplayID = 1541,
-	DefaultZoom = 0.7,
-	DefaultFacing = -0.2,
+	DefaultZoom = 0.5,
+	DefaultFacing = -0.1,
 	SoundFolder = "Interface\\AddOns\\" .. Name .. "\\Sounds\\",
 	Actions = T.Dan.Actions,
 	Animations = {
@@ -68,6 +70,9 @@ local Dan = {
 Dan.DefaultAnimation = Dan.Animations.Idle
 
 Dan.Sounds = {
+	[Dan.Actions.Welcome] = {
+		{"VO_WELCOME", 4}
+	},
 	[Dan.Actions.DungeonReady] = {
 		Master = true,
 		{"VO_DUNGEON_READY_1", 2},
@@ -84,6 +89,18 @@ Dan.Sounds = {
 }
 
 Dan.Sequences = {
+	[Dan.Actions.Welcome] = {
+		[1] = {
+			Time = 0,
+			Animation = Dan.Animations.Talk,
+			Sound = true
+		},
+		[2] = {
+			Time = 1.9,
+			Animation = Dan.Animations.Gasp,
+			Sound = false
+		}
+	},
 	[Dan.Actions.DungeonReady] = {
 		[1] = {
 			Time = 0,
@@ -169,7 +186,7 @@ function Dan:Init()
 	local frame = self.Frame
 	frame:EnableMouse(true)
 	frame:SetMovable(true)
-	frame:SetSize(250, 250)
+	frame:SetSize(400, 350)
 	frame:SetBackdrop(FrameBackdrop)
 	frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -100)
 
@@ -179,8 +196,8 @@ function Dan:Init()
 	frame.Model = CreateFrame("PlayerModel", nil, frame)
 	local model = frame.Model
 	model:EnableMouse(false)
-	model:SetPoint("TOP", frame, "TOP")
-	model:SetPoint("BOTTOM", frame, "BOTTOM")
+	model:SetPoint("TOP", frame, "TOP", 0, -4)
+	model:SetPoint("BOTTOM", frame, "BOTTOM", 0, 4)
 	model:SetPoint("LEFT", frame, "LEFT")
 	model:SetPoint("RIGHT", frame, "RIGHT")
 	model:SetDisplayInfo(self.DefaultDisplayID)
@@ -190,6 +207,12 @@ function Dan:Init()
 	model:SetScript("OnAnimFinished", function(f) self:OnAnimFinished(f) end)
 
 	self.Initialized = true
+end
+
+function Dan:ResetModelSettings()
+	self.Frame.Model:SetDisplayInfo(self.DefaultDisplayID)
+	self.Frame.Model:SetPortraitZoom(self.DefaultZoom)
+	self.Frame.Model:SetFacing(self.DefaultFacing)
 end
 
 function Dan:SetAnimation(anim)
@@ -213,7 +236,7 @@ function Dan:DoAction(action, override)
 	if not self.Sequence.Timer then
 		self.Sequence.Timer = CreateFrame("Frame")
 	end
-	if self.Sequence.Running and not override then return end
+	if (self.Sequence.Running or self.PlayingSound) and not override then return end
 	if override then
 		self:StopAction()
 	end
@@ -302,6 +325,14 @@ function Dan:UpdateAction(frame, elapsed)
 	end
 end
 
+function Dan:Hide()
+
+end
+
+function Dan:Show()
+
+end
+
 function T:CreateDan()
 	Dan:Init()
 
@@ -318,4 +349,9 @@ end
 function T.Dan:StopAction()
 	if not Dan.Initialized then return end
 	Dan:StopAction()
+end
+
+function T.Dan:ResetModelSettings()
+	if not Dan.Initialized then return end
+	Dan:ResetModelSettings()
 end
