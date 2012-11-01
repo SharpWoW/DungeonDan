@@ -17,7 +17,7 @@ F.Logic = {
 		local args = {...}
 		local fn = function(a, ...)
 			if not a then return false end
-			return a or fn(...)
+			return a() or fn(...)
 		end
 		return function() return fn(unpack(args)) end
 	end,
@@ -25,7 +25,7 @@ F.Logic = {
 		local args = {...}
 		local fn = function(a, ...)
 			if not a then return false end
-			return a and fn(...)
+			return a() and fn(...)
 		end
 		return function() return fn(unpack(args)) end
 	end,
