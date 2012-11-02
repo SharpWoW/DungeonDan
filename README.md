@@ -11,3 +11,13 @@ Original idea by Myndflame: [Dungeon Dan original on YouTube](http://www.youtube
 All sound samples (none are hosted here) are property of Myndflame.
 
 TODO: Flesh out this README.
+
+License and copyright
+---------------------
+
+Copyright (c) 2012 by Adam Hellberg (F16Gaming) <private@f16gaming.com> and Bjørn Tore Håvie (itbth) <itsbth@itsbth.com>
+
+DungeonDan is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+See the file **LICENSE** for more details or the above link.
+
+All sound files used in this project are property of Clint Hackleman (AKA Myndflame).
