@@ -24,6 +24,7 @@ T.Dan = {
 
 local Dan = {
 	Initialized = false,
+	Size = { Width = 400, Height = 350 },
 	DefaultDisplayID = 1541,
 	DefaultZoom = 0.5,
 	DefaultFacing = -0.1,
@@ -179,19 +180,26 @@ local FrameBackdrop = {
 }
 
 function Dan:Init()
+	self:LoadSavedVars()
+
 	if self.Frame then return end
 
 	-- Create container frame
 	self.Frame = CreateFrame("Frame", nil, UIParent)
 	local frame = self.Frame
-	frame:EnableMouse(true)
-	frame:SetMovable(true)
-	frame:SetSize(400, 350)
+	frame:SetSize(self.Size.Width, self.Size.Height)
 	frame:SetBackdrop(FrameBackdrop)
-	frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -20, -100)
+	frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", self.Settings.Frame.OffsetX, self.Settings.Frame.OffsetY)
 
-	frame:SetScript("OnMouseDown", function(f) f:StartMoving() end)
-	frame:SetScript("OnMouseUp", function(f) f:StopMovingOrSizing() end)
+	frame:SetScript("OnShow", function() self.Hidden = false end)
+	frame:SetScript("OnHide", function() self.Hidden = true end)
+
+	if T.Settings.Debug then
+		frame:EnableMouse(true)
+		frame:SetMovable(true)
+		frame:SetScript("OnMouseDown", function(f) f:StartMoving() end)
+		frame:SetScript("OnMouseUp", function(f) f:StopMovingOrSizing() end)
+	end
 
 	frame.Model = CreateFrame("PlayerModel", nil, frame)
 	local model = frame.Model
@@ -206,8 +214,66 @@ function Dan:Init()
 
 	model:SetScript("OnAnimFinished", function(f) self:OnAnimFinished(f) end)
 
+	frame.SlideOut = frame:CreateAnimationGroup()
+	frame.SlideOut.Anim = frame.SlideOut:CreateAnimation("Translation")
+	frame.SlideOut.Anim:SetOrder(1)
+	frame.SlideOut.Anim:SetDuration(0.5)
+	frame.SlideOut.Anim:SetOffset(self.Size.Width, 0)
+	frame.SlideOut.Anim:SetSmoothing("OUT")
+	frame.SlideOut:SetScript("OnPlay", function()
+		self.Sliding = true
+		local _, _, _, _, y = frame:GetPoint("TOPRIGHT")
+		frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -self.Size.Width + self.Settings.Frame.OffsetX, y)
+	end)
+	frame.SlideOut:SetScript("OnFinished", function()
+		local _, _, _, _, y = frame:GetPoint("TOPRIGHT")
+		frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", self.Size.Width)
+		frame:Hide()
+		self.Sliding = false
+	end)
+
+	-- Weird skip to the left happens at the end of SlideIn animation, immediately skips to the right after (probably because of setting position in OnFinished)
+	frame.SlideIn = frame:CreateAnimationGroup()
+	frame.SlideIn.Anim = frame.SlideIn:CreateAnimation("Translation")
+	frame.SlideIn.Anim:SetOrder(1)
+	frame.SlideIn.Anim:SetDuration(0.5)
+	frame.SlideIn.Anim:SetOffset(-400, 0)
+	frame.SlideIn.Anim:SetSmoothing("IN")
+	frame.SlideIn:SetScript("OnPlay", function()
+		self.Sliding = true
+		frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", self.Size.Width, self.Settings.Frame.OffsetY)
+		frame:Show()
+	end)
+	frame.SlideIn:SetScript("OnFinished", function()
+		frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", self.Settings.Frame.OffsetX, self.Settings.Frame.OffsetY)
+		self.Sliding = false
+	end)
+
 	self.Initialized = true
 end
+
+function Dan:LoadSavedVars()
+	if type(T.Settings.Dan) ~= "table" then
+		T.Settings.Dan = {}
+	end
+	self.Settings = T.Settings.Dan
+
+	if type(self.Settings.Frame) ~= "table" then
+		self.Settings.Frame = {}
+	end
+
+	if type(self.Settings.Frame.OffsetX) ~= "number" then
+		self.Settings.Frame.OffsetX = -30
+	end
+
+	if type(self.Settings.Frame.OffsetY) ~= "number" then
+		self.Settings.Frame.OffsetY = -100
+	end
+end
+
+function Dan:StopSliding()
+	self.Frame.SlideOut:Stop()
+	self.Frame.SlideIn:Stop()
 
 function Dan:ResetModelSettings()
 	self.Frame.Model:SetDisplayInfo(self.DefaultDisplayID)
@@ -326,11 +392,15 @@ function Dan:UpdateAction(frame, elapsed)
 end
 
 function Dan:Hide()
-
+	if self.Hidden then return end
+	if self.Sliding then self:StopSliding() end
+	self.Frame.SlideOut:Play()
 end
 
 function Dan:Show()
-
+	if not self.Hidden then return end
+	if self.Sliding then self:StopSliding() end
+	self.Frame.SlideIn:Play()
 end
 
 function T:CreateDan()
