@@ -1,0 +1,5 @@
+# Ignore Dropbox sharing config
+.dropbox
+
+# Ignore sound files until approval from Myndflame
+Sounds/*.ogg
