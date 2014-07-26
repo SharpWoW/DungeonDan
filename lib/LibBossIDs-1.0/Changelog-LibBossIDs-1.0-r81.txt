@@ -1,0 +1,33 @@
+------------------------------------------------------------------------
+r81 | dridzt | 2012-09-11 09:41:39 +0000 (Tue, 11 Sep 2012) | 8 lines
+Changed paths:
+   M /trunk/LibBossIDs-1.0.lua
+
+- Mogu'shan Vault (MoP Raid)
+- Heart of Fear (MoP Raid)
+- Terrace of Endless Spring (MoP Raid)
+- World Bosses Galleon, Sha of Anger (MoP)
+- Scarlet Halls (MoP Dungeon)
+- Scholomance (MoP Dungeon)
+- Shadow-Pan Monastery (MoP Dungeon)
+- Stormstout Brewery (MoP Dungeon)
+------------------------------------------------------------------------
+r80 | Talyrius | 2012-09-05 18:15:27 +0000 (Wed, 05 Sep 2012) | 1 line
+Changed paths:
+   M /trunk/LibBossIDs-1.0.toc
+
+Bumped TOC
+------------------------------------------------------------------------
+r79 | yoshimo | 2012-06-28 20:00:05 +0000 (Thu, 28 Jun 2012) | 8 lines
+Changed paths:
+   M /trunk/LibBossIDs-1.0.lua
+
+MoP-Update:
+- Gate of the Setting Sun
+- Heart of Fear
+- Mogu'Shan Palace
+- Mogu'Shan Vault
+- Nizuao Temple
+- Scarlett Cathedral
+- Temple of the Jade Serpent
+------------------------------------------------------------------------
