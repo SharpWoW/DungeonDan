@@ -2,7 +2,7 @@
 ## Version: @project-version@
 ## Title: Dungeon Dan
 ## Notes: Are you lacking the motivation to win? Dungeon Dan turns dungeon doldrums into happy fun time!
-## Author: F16Gaming
+## Author: Sharparam
 ## SavedVariables: DUNGEONDAN
 
 # Libraries
