@@ -31,6 +31,7 @@ T.Dan = {
 		QueueHealer = 3,
 		QueueTank = 4,
 		QueueTalk = 5,
+		QueueTalkDps = 15,
 		AoeDamage = 6,
 		DungeonFinish = 7,
 		BossKill = 8,
@@ -85,7 +86,7 @@ local Dan = {
 		DefaultDelay = 5,
 		Timer = nil,
 		Action = nil,
-		Index = nil,
+		Index = nil
 	}
 }
 
@@ -94,6 +95,12 @@ Dan.DefaultAnimation = Dan.Animations.Idle
 Dan.Sounds = {
 	[Dan.Actions.Welcome] = {
 		{"VO_WELCOME", 4}
+	},
+	[Dan.Actions.QueueTalk] = {
+		{"VO_EPICS", 4}
+	},
+	[Dan.Actions.QueueTalkDps] = {
+		{"VO_QUEUE_DPS", 9}
 	},
 	[Dan.Actions.DungeonReady] = {
 		Master = true,
@@ -107,6 +114,14 @@ Dan.Sounds = {
 		{"VO_AOE_2", 2},
 		{"VO_AOE_3", 2},
 		{"VO_AOE_4", 2}
+	},
+	[Dan.Actions.LootNinja] = {
+		{"VO_LOOT_NINJA", 5},
+		{"VO_LOOT_ROLL_TIPS", 7}
+	},
+	[Dan.Actions.DungeonFinish] = {
+		{"VO_DUNGEON_CLEARED", 4},
+		{"VO_DUNGEON_ANOTHER", 2}
 	}
 }
 
@@ -295,6 +310,7 @@ end
 function Dan:StopSliding()
 	self.Frame.SlideOut:Stop()
 	self.Frame.SlideIn:Stop()
+end
 
 function Dan:ResetModelSettings()
 	self.Frame.Model:SetDisplayInfo(self.DefaultDisplayID)
